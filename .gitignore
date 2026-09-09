@@ -1,0 +1,7 @@
+.spaces.env
+*.env
+user-data.yaml
+venv/
+__pycache__/
+*.pt
+.DS_Store

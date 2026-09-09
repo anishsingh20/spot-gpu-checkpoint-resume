@@ -1,0 +1,96 @@
+spot-trainer-01
+ 05:57:37 up 0 min,  1 user,  load average: 0.90, 0.28, 0.10
+Ubuntu 24.04.4 LTS
+6.8.0-137-generic
++ hostname
++ uptime
++ lsb_release -ds
++ uname -r
+
+
+
+============================ ROCm System Management Interface ============================
+================================== Memory Usage (Bytes) ==================================
+GPU[0]		: VRAM Total Memory (B): 308902100992
+GPU[0]		: VRAM Total Used Memory (B): 299544576
+==========================================================================================
+====================================== Product Info ======================================
+GPU[0]		: Card Series: 		AMD Instinct MI355X VF
+GPU[0]		: Card Model: 		0x75b3
+GPU[0]		: Card Vendor: 		Advanced Micro Devices, Inc. [AMD/ATI]
+GPU[0]		: Card SKU: 		N/A
+GPU[0]		: Subsystem ID: 	0x75a3
+GPU[0]		: Device Rev: 		0x00
+GPU[0]		: Node ID: 		1
+GPU[0]		: GUID: 		1966
+GPU[0]		: GFX Version: 		gfx950
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+
++ echo
++ rocm-smi --showproductname --showmeminfo vram
++ head -40
++ echo
+
+
+============================================ ROCm System Management Interface ============================================
+====================================================== Concise Info ======================================================
+Device  Node  IDs              Temp        Power     Partitions          SCLK   MCLK     Fan  Perf  PwrCap   VRAM%  GPU%  
+[3m              (DID,     GUID)  (Junction)  (Socket)  (Mem, Compute, ID)                                                   [0m
+==========================================================================================================================
+0       1     0x75b3,   1966   54.0°C      272.0W    NPS1, SPX, 0        38Mhz  2000Mhz  0%   auto  1400.0W  0%     0%    
+==========================================================================================================================
+================================================== End of ROCm SMI Log ===================================================
+
++ head -30
++ rocm-smi
++ echo
++ amd-smi version
++ head -5
+AMDSMI Tool: 26.5.0+2b22ab01 | AMDSMI Library version: 26.5.0 | ROCm version: 7.14.0 | amdgpu version: 6.19.14.31400000 | ionic version: N/A
+
+24
+               total        used        free      shared  buff/cache   available
+Mem:             251           6         245           0           0         244
+NAME  SIZE TYPE
+vda   720G disk
+vdb   490K disk
+vdc     5T disk
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda1       697G   28G  670G   4% /
+/dev/vda1       697G   28G  670G   4% /
+
+Python 3.12.3
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'torch'
++ echo
++ nproc
++ free -g
++ head -2
++ head
++ lsblk -d -o NAME,SIZE,TYPE
++ df -h / /mnt
++ echo
++ python3 --version
++ python3 -c 'import torch; print("torch", torch.__version__, "rocm", torch.version.hip, "cuda_avail", torch.cuda.is_available(), torch.cuda.get_device_name(0) if torch.cuda.is_available() else None)'
++ pip3 list
++ grep -i 'torch\|boto3'
++ curl -s http://169.254.169.254/metadata/v1/
+id
+hostname
+user-data
+vendor-data
+public-keys
+region
+interfaces/
+dns/
+floating_ip/
+reserved_ip/
+tags/
+features/
+virtual_ips/
++ echo
++ curl -s http://169.254.169.254/metadata/v1.json
++ head -c 1500
+{"droplet_id":598950047,"hostname":"spot-trainer-01","vendor_data":"Content-Type: multipart/mixed; boundary=\"===============8645434374073493512==\"\nMIME-Version: 1.0\n\n--===============8645434374073493512==\nMIME-Version: 1.0\nContent-Type: text/cloud-config; charset=\"us-ascii\"\nContent-Transfer-Encoding: 7bit\nContent-Disposition: attachment; filename=\"cloud-config\"\n\n#cloud-config\n\n# Enable root and password auth\ndisable_root: false\nssh_pwauth: false\n\n# Allow cloud-init to manage /etc/hosts\nmanage_etc_hosts: true\n\n# Set the default user to root and define the package mirrors\nsystem_info:\n   distro: ubuntu\n   default_user:\n      name: root\n      shell: /bin/bash\n      lock_passwd: false\n   package_mirrors:\n     - arches: [i386, amd64]\n       failsafe:\n         primary: http://archive.ubuntu.com/ubuntu\n         security: http://security.ubuntu.com/ubuntu\n       search:\n         primary:\n           - http://mirrors.digitalocean.com/ubuntu/\n         security: []\n\n\n--===============8645434374073493512==\nMIME-Version: 1.0\nContent-Type: text/cloud-boothook; charset=\"us-ascii\"\nContent-Transfer-Encoding: 7bit\nContent-Disposition: attachment; filename=\"resolver-fix\"\n\n#!/bin/sh -x\n# DigitalOcean resolver fixup script\ncloud-init-per instance do-resolved-conf /bin/false \u0026\u0026 exit 0\n[ -f /etc/systemd/resolved.conf ] || grep -q 'Fedora Linux 40' /etc/os-release || exit 0\nlogger -t DigitalOcean 'writing resolvers  to /etc/systemd/res

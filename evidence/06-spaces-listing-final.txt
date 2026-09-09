@@ -1,0 +1,13 @@
+       0.0 MB  06:29:17  checkpoints/sweep-01/LATEST
+    2417.0 MB  06:15:15  checkpoints/sweep-01/step-000001892.pt
+    2417.0 MB  06:26:21  checkpoints/sweep-01/step-000002400.pt
+    2417.0 MB  06:29:17  checkpoints/sweep-01/step-000003000.pt
+LATEST -> checkpoints/sweep-01/step-000003000.pt
+
+== timeline
+cloud-init finished 2026-09-09T06:23:31Z
+2026-09-09T06:23:31+00:00 spot-trainer-02 systemd[1]: Started spot-train.service - Checkpoint-and-resume training on a Spot GPU Droplet.
+2026-09-09T06:29:18+00:00 spot-trainer-02 systemd[1]: spot-train.service: Deactivated successfully.
+2026-09-09T06:29:18+00:00 spot-trainer-02 systemd[1]: spot-train.service: Consumed 11min 16.422s CPU time.
+2026-09-09 06:19:23
+GPU[0]		: Card Series: 		AMD Instinct MI355X VF

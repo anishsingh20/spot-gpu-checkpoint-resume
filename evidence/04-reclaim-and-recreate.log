@@ -1,0 +1,7 @@
+== simulated reclaim: destroy spot-trainer-01 (598950047) at 2026-09-09T06:18:26Z
+destroy accepted 2026-09-09T06:18:27Z
+== create replacement spot-trainer-02 at 2026-09-09T06:18:27Z
+Error: unknown column "Size"
+doctl compute droplet create spot-trainer-02 --region mem1 --size  --image     0.09s user 0.04s system 0% cpu 57.080 total
+active at 2026-09-09T06:19:25Z
+598954862    spot-trainer-02    active    mem1    201.79.18.155    <nil>

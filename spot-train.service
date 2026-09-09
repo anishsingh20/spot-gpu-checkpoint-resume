@@ -1,0 +1,21 @@
+[Unit]
+Description=Checkpoint-and-resume training on a Spot GPU Droplet
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root
+EnvironmentFile=/root/.spaces.env
+# Same --run-id on every Droplet that runs this job; that is what makes resume work.
+ExecStart=/root/venv/bin/python /root/spot_train.py --run-id sweep-01 --total-steps 3000 --every-steps 600
+# On shutdown or `systemctl stop`, systemd sends SIGTERM and waits this long
+# for the final checkpoint to upload before it escalates to SIGKILL.
+KillSignal=SIGTERM
+TimeoutStopSec=600
+Restart=no
+StandardOutput=append:/root/train.log
+StandardError=append:/root/train.log
+
+[Install]
+WantedBy=multi-user.target

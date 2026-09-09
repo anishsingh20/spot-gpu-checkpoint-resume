@@ -1,0 +1,65 @@
+#cloud-config
+# Replacement Spot GPU Droplet: installs the stack, drops in the training
+# script and unit, and starts training. Because the unit uses the same
+# --run-id, the script finds LATEST in Spaces and resumes automatically.
+#
+# Do not use this file directly. Run make_user_data.py, which fills in the
+# Spaces credentials from a local env file and inlines spot_train.py:
+#
+#   python3 make_user_data.py --env ~/.spaces.env > /tmp/user-data.yaml
+#   doctl compute droplet create spot-trainer-02 --region mem1 \
+#     --size gpu-mi355x1-288gb-spot --image gpu-amd-base \
+#     --ssh-keys $SSH_KEY_FINGERPRINT --user-data-file /tmp/user-data.yaml --wait
+#
+# Anyone with root on the Droplet can read user-data via the metadata service,
+# so scope the Spaces key to the one checkpoint bucket and rotate it after.
+
+write_files:
+  - path: /root/.spaces.env
+    permissions: "0600"
+    content: |
+      SPACES_KEY=__SPACES_KEY__
+      SPACES_SECRET=__SPACES_SECRET__
+      SPACES_REGION=__SPACES_REGION__
+      SPACES_BUCKET=__SPACES_BUCKET__
+
+  - path: /root/spot_train.py
+    permissions: "0755"
+    content: |
+__SPOT_TRAIN_PY__
+
+  - path: /etc/systemd/system/spot-train.service
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=Checkpoint-and-resume training on a Spot GPU Droplet
+      After=network-online.target
+      Wants=network-online.target
+
+      [Service]
+      Type=simple
+      WorkingDirectory=/root
+      EnvironmentFile=/root/.spaces.env
+      ExecStart=/root/venv/bin/python /root/spot_train.py --run-id sweep-01 --total-steps 3000 --every-steps 600
+      KillSignal=SIGTERM
+      TimeoutStopSec=600
+      Restart=no
+      StandardOutput=append:/root/train.log
+      StandardError=append:/root/train.log
+
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - export DEBIAN_FRONTEND=noninteractive
+  - apt-get update -qq
+  - apt-get install -y -qq python3-venv
+  - python3 -m venv /root/venv
+  - /root/venv/bin/pip install -q --upgrade pip
+  # Match the wheel index to the ROCm version on the image (check with amd-smi version).
+  # On the NVIDIA image (gpu-h100x1-base) drop --index-url; the default wheel carries CUDA.
+  - /root/venv/bin/pip install -q --index-url https://download.pytorch.org/whl/rocm7.14 torch
+  - /root/venv/bin/pip install -q boto3 numpy
+  - systemctl daemon-reload
+  - systemctl enable --now spot-train
+  - echo "cloud-init finished $(date -u +%FT%TZ)" >> /root/train.log
