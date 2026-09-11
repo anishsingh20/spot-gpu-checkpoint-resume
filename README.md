@@ -2,7 +2,9 @@
 
 A small, runnable PyTorch training loop that survives losing its machine. Every N steps it saves model, optimizer, and step counter to [DigitalOcean Spaces](https://docs.digitalocean.com/products/spaces/). If the [Spot GPU Droplet](https://docs.digitalocean.com/products/droplets/concepts/spot-vs-on-demand/) it runs on is reclaimed, you create a new one with the same command and it picks up where it left off. Nothing else to do.
 
-This is the companion code for the DigitalOcean tutorial **Fault-Tolerant Training on Spot GPU Droplets**. Everything in the tutorial's numbers came from running exactly these files on a `gpu-mi355x1-288gb-spot` Droplet in MEM1 on September 9, 2026.
+This is the companion code for the DigitalOcean tutorial [**Fault-Tolerant Training on Spot GPU Droplets: Checkpoint, Resume, and Keep Your Run Alive**](https://www.digitalocean.com/community/tutorials/spot-gpu-droplets-fault-tolerance). Everything in the tutorial's numbers came from running exactly these files on a `gpu-mi355x1-288gb-spot` Droplet in MEM1 on September 9, 2026.
+
+Read the tutorial: https://www.digitalocean.com/community/tutorials/spot-gpu-droplets-fault-tolerance
 
 ## What is in here
 
