@@ -4,8 +4,6 @@ A small, runnable PyTorch training loop that survives losing its machine. Every 
 
 This is the companion code for the DigitalOcean tutorial [**Fault-Tolerant Training on Spot GPU Droplets: Checkpoint, Resume, and Keep Your Run Alive**](https://www.digitalocean.com/community/tutorials/spot-gpu-droplets-fault-tolerance). Everything in the tutorial's numbers came from running exactly these files on a `gpu-mi355x1-288gb-spot` Droplet in MEM1 on September 9, 2026.
 
-Read the tutorial: https://www.digitalocean.com/community/tutorials/spot-gpu-droplets-fault-tolerance
-
 ## What is in here
 
 | File | What it does |
